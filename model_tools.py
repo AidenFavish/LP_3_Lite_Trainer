@@ -1,5 +1,7 @@
 import torch
 
+import parameters
+
 
 # Function to save the model state dict
 def save_model_state(model, path='no_name_model.pth'):
@@ -25,7 +27,9 @@ def load_model(path):
 
 # Gets appropriate device
 def get_device():
-    if torch.cuda.is_available():
+    if parameters.force_device != "":
+        device = torch.device(parameters.force_device)
+    elif torch.cuda.is_available():
         device = torch.device('cuda')
     elif torch.backends.mps.is_available():
         device = torch.device('mps')
