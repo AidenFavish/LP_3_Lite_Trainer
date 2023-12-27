@@ -34,8 +34,12 @@ def main():
     # Train the model
     trainer.train(model, train_loader, device)
 
-    # Offer to save the model after training
-    save_input = input("Do you want to save the model? How? (full/state/no): ").strip().lower()
+    # Offer to save the model after training or automatically save it
+    if parameters.automate_save != "":
+        save_input = parameters.automate_save
+    else:
+        save_input = input("Do you want to save the model? How? (full/state/no): ").strip().lower()
+
     if save_input == 'full':
         model_tools.save_model(model, parameters.save_as)
     elif save_input == 'state':
