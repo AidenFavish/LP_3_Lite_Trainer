@@ -36,7 +36,7 @@ def get_device():
     else:
         device = torch.device('cpu')
 
-    print("Using device: ", device)
+    print(f"\nUsing device: {device}\n")
     return device
 
 
