@@ -14,10 +14,10 @@ def main():
 
     # Ask user to train a new model or load an existing one
     load_input = input(
-        "Do you want to use a blank model or load a model? (blank/load full/load state): ").strip().lower()
-    if load_input == 'load full':
+        "Do you want to use a blank model or load a model? (blank/state/full): ").strip().lower()
+    if load_input == 'full':
         model = model_tools.load_model(parameters.model_path)
-    elif load_input == 'load state':
+    elif load_input == 'state':
         model = model_tools.load_model_state(default_model, parameters.model_path)
     else:
         model = default_model
@@ -26,24 +26,26 @@ def main():
     device = model_tools.get_device()
     model.to(device)  # Move the model to the MPS device or CPU
 
-    # Load training data
-    training_dataset = dataset_loader.LPDataset1(project_dir=parameters.training_folder,
-                                                 transform=transforms.ToTensor())
-    train_loader = DataLoader(dataset=training_dataset, batch_size=parameters.batch_size, shuffle=True)
+    # Skips training if the user wants to only validate otherwise trains and saves model here
+    if not parameters.only_validate:
+        # Load training data
+        training_dataset = dataset_loader.LPDataset1(project_dir=parameters.training_folder,
+                                                     transform=transforms.ToTensor())
+        train_loader = DataLoader(dataset=training_dataset, batch_size=parameters.batch_size, shuffle=True)
 
-    # Train the model
-    trainer.train(model, train_loader, device)
+        # Train the model
+        trainer.train(model, train_loader, device)
 
-    # Offer to save the model after training or automatically save it
-    if parameters.automate_save != "":
-        save_input = parameters.automate_save
-    else:
-        save_input = input("Do you want to save the model? How? (full/state/no): ").strip().lower()
+        # Offer to save the model after training or automatically save it
+        if parameters.automate_save != "":
+            save_input = parameters.automate_save
+        else:
+            save_input = input("Do you want to save the model? How? (full/state/no): ").strip().lower()
 
-    if save_input == 'full':
-        model_tools.save_model(model, parameters.save_as)
-    elif save_input == 'state':
-        model_tools.save_model_state(model, parameters.save_as)
+        if save_input == 'full':
+            model_tools.save_model(model, parameters.save_as)
+        elif save_input == 'state':
+            model_tools.save_model_state(model, parameters.save_as)
 
     # Offer to run validation
     validate_user_input = input("Do you want to validate the model? (yes/no): ").strip().lower()

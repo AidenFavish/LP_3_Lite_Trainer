@@ -4,6 +4,7 @@ run_instance = "1.0"
 batch_print = 1
 force_device = "cpu"
 automate_save = ""
+only_validate = False
 
 # LOCAL ACCESS PARAMETERS
 training_folder = "/Users/aiden/Desktop/Training1"
