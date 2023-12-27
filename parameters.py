@@ -4,10 +4,10 @@ run_instance = "1.0"
 batch_print = 10
 
 # LOCAL ACCESS PARAMETERS
-training_folder = ""
-model_path = ""
-save_as = ""
-validation_folder = ""
+training_folder = "/Users/aiden/Desktop/Training1"
+model_path = "/Users/aiden/Desktop/Models/v1.pth"
+save_as = "/Users/aiden/Desktop/Models/v1.pth"
+validation_folder = "/Users/aiden/Desktop/Validation1"
 
 # HYPERPARAMETERS
 learning_rate = 0.001

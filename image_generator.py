@@ -45,4 +45,4 @@ def generate_images(num_images, folder_path, csv_filename):
 
 
 # Example usage
-generate_images(num_images=500, folder_path='/Users/aiden/Desktop/Training1', csv_filename='data.csv')
+generate_images(num_images=5, folder_path='/Users/aiden/Desktop/Validation1', csv_filename='data.csv')
