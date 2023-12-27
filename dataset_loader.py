@@ -6,10 +6,10 @@ import os
 
 
 # Loads the dataset from the given directories and returns a DataLoader object.
-class CustomDataset(Dataset):
-    def __init__(self, csv_file, root_dir, transform=None):
-        self.annotations = pd.read_csv(csv_file)
-        self.root_dir = root_dir
+class LPDataset1(Dataset):
+    def __init__(self, project_dir, transform=None):
+        self.annotations = pd.read_csv(project_dir + "/data.csv")
+        self.root_dir = project_dir
         self.transform = transform
 
     def __len__(self):

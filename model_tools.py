@@ -1,5 +1,4 @@
 import torch
-from PIL import Image
 
 
 # Function to save the model state dict
@@ -24,17 +23,6 @@ def load_model(path):
     return model
 
 
-# Function to test the model with an input image (will verify more later)
-def test_model(model, image_path, transform, device):
-    model.eval()
-    image = Image.open(image_path).convert('RGB')  # Convert to RGB
-    image = transform(image).unsqueeze(0)  # Add batch dimension
-    image = image.to(device)  # Move the image to the same device as the model
-    with torch.no_grad():
-        output = model(image)
-    return output
-
-
 # Gets appropriate device
 def get_device():
     if torch.cuda.is_available():
@@ -46,3 +34,16 @@ def get_device():
 
     print("Using device: ", device)
     return device
+
+
+# Validates the model
+def validate(model, validate_loader, device):
+    print("Validation:")
+    model.eval()
+    with torch.no_grad():
+        for batch_idx, (data, target) in enumerate(validate_loader):
+            data, target = data.to(device), target.to(device)
+            output = model(data)
+
+            # print the validation results
+            print(f"[{batch_idx + 1}] predicted: {output} actual: {target}")

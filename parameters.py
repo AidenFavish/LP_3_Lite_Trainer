@@ -7,7 +7,7 @@ batch_print = 10
 training_folder = ""
 model_path = ""
 save_as = ""
-validation_path = ""
+validation_folder = ""
 
 # HYPERPARAMETERS
 learning_rate = 0.001
