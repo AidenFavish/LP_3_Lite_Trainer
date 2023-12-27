@@ -4,7 +4,7 @@ import parameters
 
 # Trains the model
 def train(model, dataloader, device):
-    print('Starting Training\n')
+    print('Starting Training...')
 
     # Setup
     writer = SummaryWriter(f"runs/{parameters.version}/{parameters.run_instance}")  # Tensorboard writer
