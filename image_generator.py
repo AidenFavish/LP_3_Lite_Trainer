@@ -3,11 +3,13 @@ import csv
 import random
 from PIL import Image, ImageDraw
 
-"""
-Function to generate images and a CSV file with the image details.
-Each image will have a random background color and a randomly positioned and sized square with a random color.
-"""
+
 def generate_images(num_images, folder_path, csv_filename):
+    """
+    Function to generate images and a CSV file with the image details.
+    Each image will have a random background color and a randomly positioned and sized square with a random color.
+    """
+
     # Create the directory if it does not exist
     os.makedirs(folder_path, exist_ok=True)
 
@@ -45,4 +47,4 @@ def generate_images(num_images, folder_path, csv_filename):
 
 
 # Example usage
-generate_images(num_images=5, folder_path='/Users/aiden/Desktop/Validation1', csv_filename='data.csv')
+generate_images(num_images=5, folder_path=r'\Users\aiden\OneDrive\Desktop\verification1', csv_filename='data.csv')
