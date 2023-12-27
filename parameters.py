@@ -2,18 +2,18 @@
 version = "v1"
 run_instance = "1.0"
 batch_print = 1
-force_device = "cpu"
+force_device = ""
 automate_save = ""
 only_validate = False
 
 # LOCAL ACCESS PARAMETERS
-training_folder = "/Users/aiden/Desktop/Training1"
-model_path = "/Users/aiden/Desktop/Models/v1.pth"
-save_as = "/Users/aiden/Desktop/Models/v1.pth"
-validation_folder = "/Users/aiden/Desktop/Validation1"
+training_folder = "/home/penny/Desktop/LP_Training/TrainingData1"
+model_path = "/home/penny/Desktop/LP_Training/v1.pth"
+save_as = "/home/penny/Desktop/LP_Training/v1.pth"
+validation_folder = "/home/penny/Desktop/LP_Training/ValidationData1"
 
 # HYPERPARAMETERS
 learning_rate = 0.001
 weight_decay = 1e-5
-batch_size = 100
-num_epochs = 1
+batch_size = 1
+num_epochs = 5

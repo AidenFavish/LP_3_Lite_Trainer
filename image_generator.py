@@ -47,4 +47,4 @@ def generate_images(num_images, folder_path, csv_filename):
 
 
 # Example usage
-generate_images(num_images=5, folder_path=r'\Users\aiden\OneDrive\Desktop\verification1', csv_filename='data.csv')
+generate_images(num_images=10, folder_path=r'/home/penny/Desktop/LP_Training/ValidationData1', csv_filename='data.csv')

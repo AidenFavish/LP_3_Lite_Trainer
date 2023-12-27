@@ -9,8 +9,14 @@ def train(model, dataloader, device):
     # Setup
     writer = SummaryWriter(f"runs/{parameters.version}/{parameters.run_instance}")  # Tensorboard writer
     num_epochs = parameters.num_epochs
-    optimizer = model.optimizer
-    criterion = model.loss_function
+    
+    try:
+        optimizer = model.optimizer
+        criterion = model.loss_function
+    except Exception as e:
+        print("Parallel object detected accessing module")
+        optimizer = model.module.optimizer
+        criterion = model.module.loss_function
 
     for epoch in range(num_epochs):
         print("------------------------------------------")

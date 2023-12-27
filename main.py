@@ -5,7 +5,8 @@ import dataset_loader
 import parameters
 import model_tools
 import trainer
-
+import torch
+import torch.nn as nn
 
 # Main function
 def main():
@@ -25,6 +26,11 @@ def main():
     # Prepare the device
     device = model_tools.get_device()
     model.to(device)  # Move the model to the MPS device or CPU
+    
+    # EXPERIMENTAL
+    if torch.cuda.device_count() > 1:
+        model = nn.DataParallel(model)
+        print("In parallel mode\n")
 
     # Skips training if the user wants to only validate otherwise trains and saves model here
     if not parameters.only_validate:
