@@ -5,7 +5,7 @@ batch_print = 5
 force_device = ""
 automate_save = ""
 only_validate = False
-parallel_processing = False
+parallel_processing = True
 
 # LOCAL ACCESS PARAMETERS
 training_folder = "/home/penny/Desktop/LP_Training/TrainingData1"
@@ -14,7 +14,7 @@ save_as = "/home/penny/Desktop/LP_Training/v2.pth"
 validation_folder = "/home/penny/Desktop/LP_Training/ValidationData1"
 
 # HYPERPARAMETERS
-learning_rate = 0.005
+learning_rate = 0.002
 weight_decay = 1e-5
 batch_size = 20
-num_epochs = 10
+num_epochs = 15
