@@ -209,18 +209,18 @@ class MultiGPU_CNN(nn.Module):
     def forward(self, x):
         # Convolutional part on GPU 0
         x = x.to('cuda:0')
-        print(f"Input device: {x.device}, conv1: {self.conv1.device}, pool: {self.pool.device}")
+        print(f"Input device: {x.device}, conv1: {self.conv1.weight.device}")
         x = self.pool(self.act1(self.conv1(x)))
 
         # Transition to GPU 1 for first fully connected layer
         x = x.to('cuda:1')
-        print(f"Input device: {x.device}, fc1: {self.fc1.device}")
+        print(f"Input device: {x.device}, fc1: {self.fc1.weight.device}")
         x = x.view(-1, 16 * self.pool_output_size * self.pool_output_size)
         x = self.act2(self.fc1(x))
 
         # Transition to GPU 2 for second fully connected layer
         x = x.to('cuda:2')
-        print(f"Input device: {x.device}, fc2: {self.fc2.device}")
+        print(f"Input device: {x.device}, fc2: {self.fc2.weight.device}")
         x = self.act3(self.fc2(x))
 
         return x
