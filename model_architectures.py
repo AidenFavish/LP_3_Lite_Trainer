@@ -186,18 +186,18 @@ class MultiGPU_CNN(nn.Module):
         super(MultiGPU_CNN, self).__init__()
 
         # Convolutional layers on GPU 0
-        self.conv1 = nn.Conv2d(3, 16, kernel_size=3, stride=1, padding=1)
+        self.conv1 = nn.Conv2d(3, 16, kernel_size=3, stride=2, padding=1)
         self.pool = nn.MaxPool2d(kernel_size=2, stride=2, padding=0)
         self.act1 = nn.ReLU()
 
         # Calculate output sizes
-        self.conv_output_size = (1000 - 3 + 2 * 1) // 1 + 1
+        self.conv_output_size = (1000 - 3 + 2 * 1) // 2 + 1
         self.pool_output_size = self.conv_output_size // 2
 
         # Fully connected layers
-        self.fc1 = nn.Linear(16 * self.pool_output_size * self.pool_output_size, 256)
+        self.fc1 = nn.Linear(16 * self.pool_output_size * self.pool_output_size, 32)
         self.act2 = nn.ELU()
-        self.fc2 = nn.Linear(256, 4)
+        self.fc2 = nn.Linear(32, 4)
         self.act3 = nn.Sigmoid()
 
         # Move layers to respective GPUs
@@ -228,6 +228,7 @@ class MultiGPU_CNN(nn.Module):
 
         # Transition to GPU 2 for second fully connected layer
         x = x.to('cuda:2')
+        self.fc2.to('cuda:2')
         print(f"Input device: {x.device}, fc2: {self.fc2.weight.device}")
         x = self.act3(self.fc2(x))
 
