@@ -50,4 +50,8 @@ def validate(model, validate_loader, device):
             output = model(data)
 
             # print the validation results
-            print(f"[{batch_idx + 1}] predicted: {output.tolist()[0]} actual: {target.tolist()[0]}")
+            print("--------------------------------------------------------")
+            print(f"[{batch_idx + 1}] predicted: {output.tolist()[0]}")
+            print(f"[{batch_idx + 1}] actual: {target.tolist()[0]}")
+            print(f"\033[1;34m[{batch_idx + 1}] difference: {(target - output).pow(2).sqrt().tolist()[0]}\033[0m")
+            print("--------------------------------------------------------\n")

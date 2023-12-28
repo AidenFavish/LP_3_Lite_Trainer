@@ -1,5 +1,6 @@
 from torch.utils.tensorboard import SummaryWriter  # tensorboard --logdir=runs --host 192.168.4.247 --port 8080
 import parameters
+import time
 
 
 # Trains the model
@@ -21,6 +22,7 @@ def train(model, dataloader, device):
     for epoch in range(num_epochs):
         print("------------------------------------------")
 
+        start_time = time.time()
         running_loss = 0.0  # Loss for the epoch
         for i, data in enumerate(dataloader, 0):
             inputs, labels = data
@@ -41,4 +43,7 @@ def train(model, dataloader, device):
             elif i % parameters.batch_print == 0:
                 print(f'[{epoch + 1}, {i + 1}] avg loss: {avg_loss:.3f}')
 
-        print(f"------------------------------------------\n\033[1;31mEpoch {epoch + 1} finished. Average Loss: {running_loss/len(dataloader)}\033[0m\n")
+        duration = time.time() - start_time
+        print(f"------------------------------------------\n\033[1;31mEpoch {epoch + 1} finished. Average Loss: {running_loss/len(dataloader)}\033[0m")
+        seconds = int(duration * (num_epochs - epoch - 1))
+        print(f"\033[1;37mETA: {seconds // 60} minutes and {seconds % 60} seconds\033[0m\n")
