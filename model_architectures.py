@@ -66,7 +66,7 @@ class ImprovedCNN(nn.Module):
         # Calculate output sizes for conv and pooling layers
         self.conv_output_size1 = ((1000 - 3 + 2 * 1) // 2 + 1)  # Output size after conv1
         self.conv_output_size2 = ((self.conv_output_size1 - 3 + 2 * 1) // 2 + 1)  # Output size after conv2
-        self.pool_output_size = self.conv_output_size2 // 2  # Output size after pooling
+        self.pool_output_size = 62 #self.conv_output_size2 // 2  # Output size after pooling
         print("Pool output size:", self.pool_output_size)
 
         # Fully connected layers
