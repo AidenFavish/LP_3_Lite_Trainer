@@ -67,6 +67,7 @@ class ImprovedCNN(nn.Module):
         self.conv_output_size1 = ((1000 - 3 + 2 * 1) // 2 + 1)  # Output size after conv1
         self.conv_output_size2 = ((self.conv_output_size1 - 3 + 2 * 1) // 2 + 1)  # Output size after conv2
         self.pool_output_size = self.conv_output_size2 // 2  # Output size after pooling
+        print("Pool output size:", self.pool_output_size)
 
         # Fully connected layers
         self.fc1 = nn.Linear(32 * self.pool_output_size * self.pool_output_size, 42)
