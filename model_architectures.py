@@ -6,22 +6,6 @@ import parameters
 
 
 class DefaultCNN(nn.Module):
-    """
-    This is a basic CNN architecture for processing images.
-    It takes in 1000x1000 RGB images and outputs a 4-dimensional vector.
-    The output vector is the predicted center (x and y), the radius of the square, and turn/tilt.
-
-    Components:
-    1. 3 channel input, 16 output channels, 3x3 kernel, stride 1, padding 1 conv layer
-    2. ReLU activation
-    3. 2x2 max pooling layer
-    4. Linear layer with 16 * 500 * 500 inputs (16 channels * pool_output_size * pool_output_size) and 512 outputs
-    5. TanH activation
-    6. Linear layer with 512 inputs and 128 outputs
-    7. ELU activation
-    8. Linear layer with 128 inputs and 4 outputs
-    """
-
     def __init__(self):
         super(DefaultCNN, self).__init__()
 
@@ -58,6 +42,55 @@ class DefaultCNN(nn.Module):
         x = x.view(-1, 16 * self.pool_output_size * self.pool_output_size)
         x = self.act3(self.fc1(x))
         x = self.act3(self.fc2(x))
+        return x
+
+
+class ImprovedCNN(nn.Module):
+    """
+    Improved CNN architecture for object detection.
+    This model inputs 1000x1000 RGB images and outputs a 4-dimensional vector.
+    The output vector represents the normalized center (x and y), width, and height of the detected object.
+    """
+
+    def __init__(self):
+        super(ImprovedCNN, self).__init__()
+
+        # Convolutional layers
+        self.conv1 = nn.Conv2d(3, 16, kernel_size=3, stride=2, padding=1)
+        self.conv2 = nn.Conv2d(16, 32, kernel_size=3, stride=2, padding=1)
+        self.pool = nn.MaxPool2d(kernel_size=2, stride=2, padding=0)
+        self.dropout = nn.Dropout(0.5)
+        self.batchnorm1 = nn.BatchNorm2d(16)
+        self.batchnorm2 = nn.BatchNorm2d(32)
+
+        # Calculate output sizes for conv and pooling layers
+        self.conv_output_size1 = ((1000 - 3 + 2 * 1) // 2 + 1)  # Output size after conv1
+        self.conv_output_size2 = ((self.conv_output_size1 - 3 + 2 * 1) // 2 + 1)  # Output size after conv2
+        self.pool_output_size = self.conv_output_size2 // 2  # Output size after pooling
+
+        # Fully connected layers
+        self.fc1 = nn.Linear(32 * self.pool_output_size * self.pool_output_size, 42)
+        self.fc2 = nn.Linear(42, 4)
+
+        # Activation functions
+        self.act1 = nn.ReLU()
+        self.act2 = nn.Sigmoid()
+
+        # Optimizer
+        self.optimizer = optim.Adam(self.parameters(), lr=parameters.learning_rate)
+
+        # Loss function
+        self.loss_function = nn.SmoothL1Loss()
+
+    def forward(self, x):
+        x = self.batchnorm1(self.conv1(x))
+        x = self.act1(self.pool(x))
+        x = self.batchnorm2(self.conv2(x))
+        x = self.act1(self.pool(x))
+        x = self.dropout(x)
+        x = x.view(-1, 32 * self.pool_output_size * self.pool_output_size)
+        x = self.act1(self.fc1(x))
+        x = self.act2(self.fc2(x))
         return x
 
 

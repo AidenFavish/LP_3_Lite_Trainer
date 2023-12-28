@@ -1,5 +1,5 @@
 # RUN INSTANCE PARAMETERS
-version = "v1_HuberLoss"
+version = "v2"
 run_instance = "1.0"
 batch_print = 5
 force_device = ""
@@ -9,8 +9,8 @@ parallel_processing = True
 
 # LOCAL ACCESS PARAMETERS
 training_folder = "/home/penny/Desktop/LP_Training/TrainingData1"
-model_path = "/home/penny/Desktop/LP_Training/v1.pth"
-save_as = "/home/penny/Desktop/LP_Training/v1.pth"
+model_path = "/home/penny/Desktop/LP_Training/v2.pth"
+save_as = "/home/penny/Desktop/LP_Training/v2.pth"
 validation_folder = "/home/penny/Desktop/LP_Training/ValidationData1"
 
 # HYPERPARAMETERS
