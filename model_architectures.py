@@ -83,11 +83,11 @@ class ImprovedCNN(nn.Module):
         self.loss_function = nn.SmoothL1Loss()
 
     def forward(self, x):
-        x = self.batchnorm1(self.conv1(x))
+        x = self.act1(self.conv1(x))
         x = self.act1(self.pool(x))
-        x = self.batchnorm2(self.conv2(x))
+        x = self.act1(self.conv2(x))
         x = self.act1(self.pool(x))
-        #x = self.dropout(x)
+        x = self.dropout(x)
         x = x.view(-1, 32 * self.pool_output_size * self.pool_output_size)
         x = self.act1(self.fc1(x))
         x = self.act2(self.fc2(x))
