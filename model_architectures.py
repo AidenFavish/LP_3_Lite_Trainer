@@ -221,6 +221,7 @@ class MultiGPU_CNN(nn.Module):
 
         # Transition to GPU 1 for first fully connected layer
         x = x.to('cuda:1')
+        self.fc1.to('cuda:1')
         print(f"Input device: {x.device}, fc1: {self.fc1.weight.device}")
         x = x.view(-1, 16 * self.pool_output_size * self.pool_output_size)
         x = self.act2(self.fc1(x))
