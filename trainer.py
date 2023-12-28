@@ -1,4 +1,4 @@
-from torch.utils.tensorboard import SummaryWriter  # tensorboard --logdir=runs
+from torch.utils.tensorboard import SummaryWriter  # tensorboard --logdir=runs --host 192.168.4.247 --port 8080
 import parameters
 
 

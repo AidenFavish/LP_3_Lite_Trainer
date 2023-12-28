@@ -47,7 +47,7 @@ class DefaultCNN(nn.Module):
         self.optimizer = optim.Adam(self.parameters(), lr=parameters.learning_rate, weight_decay=parameters.weight_decay)
 
         # Loss function
-        self.loss_function = nn.MSELoss()
+        self.loss_function = nn.HuberLoss()
 
         # Version
         self.version = parameters.version
