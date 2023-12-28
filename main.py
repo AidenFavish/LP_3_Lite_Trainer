@@ -29,7 +29,7 @@ def main():
     model.to(device)  # Move the model to the MPS device or CPU
 
     # Check for parallel processing
-    if parameters.parallel_processing and device == "cuda" and torch.cuda.device_count() > 1:
+    if parameters.parallel_processing and torch.cuda.is_available() and torch.cuda.device_count() > 1:
         model = nn.DataParallel(model)
         print("Parallel processing enabled.\n")
     elif parameters.parallel_processing:
