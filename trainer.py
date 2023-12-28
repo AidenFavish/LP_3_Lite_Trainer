@@ -37,6 +37,6 @@ def train(model, dataloader, device):
             avg_loss = running_loss / (i + 1)  # Average loss for the epoch so far
             writer.add_scalar('training loss', avg_loss, epoch * len(dataloader) + i)
             if i % parameters.batch_print == 0:
-                print(f'[{epoch + 1}, {i + 1}] avg loss: {avg_loss:.3f}')
+                print(f'[{epoch + 1}, {i + 1}] avg loss: {avg_loss:.3f}     predict: {outputs.tolist()[0]} - actual: {labels.tolist()[0]}')
 
         print(f"------------------------------------------\n\033[1;31mEpoch {epoch + 1} finished. Average Loss: {running_loss/len(dataloader)}\033[0m\n")
