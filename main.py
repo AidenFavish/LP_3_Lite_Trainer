@@ -8,10 +8,11 @@ import trainer
 import torch
 import torch.nn as nn
 
+
 # Main function
 def main():
     # DEFAULT MODEL
-    default_model = model_architectures.DefaultCNN()
+    default_model = model_architectures.MultiGPU_CNN()
 
     # Ask user to train a new model or load an existing one
     load_input = input(
@@ -26,11 +27,6 @@ def main():
     # Prepare the device
     device = model_tools.get_device()
     model.to(device)  # Move the model to the MPS device or CPU
-    
-    # EXPERIMENTAL
-    if torch.cuda.device_count() > 1:
-        model = nn.DataParallel(model)
-        print("In parallel mode\n")
 
     # Skips training if the user wants to only validate otherwise trains and saves model here
     if not parameters.only_validate:
@@ -40,7 +36,7 @@ def main():
         train_loader = DataLoader(dataset=training_dataset, batch_size=parameters.batch_size, shuffle=True)
 
         # Train the model
-        trainer.train(model, train_loader, device)
+        trainer.train2(model, train_loader)
 
         # Offer to save the model after training or automatically save it
         if parameters.automate_save != "":
@@ -58,7 +54,7 @@ def main():
     if validate_user_input == 'yes':
         validation_dataset = dataset_loader.LPDataset1(project_dir=parameters.validation_folder,
                                                        transform=transforms.ToTensor())
-        validate_loader = DataLoader(dataset=validation_dataset, batch_size=1, shuffle=True)
+        validate_loader = DataLoader(dataset=validation_dataset, batch_size=1, shuffle=False)
         model_tools.validate(model, validate_loader, device)
 
 

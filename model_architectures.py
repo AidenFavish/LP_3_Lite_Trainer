@@ -119,8 +119,6 @@ class YOLONetwork(nn.Module):
 
         return x
 
-    import torchvision.models as models
-
 
 class EnhancedFasterRCNNNetwork(nn.Module):
     """
@@ -181,3 +179,46 @@ class EnhancedFasterRCNNNetwork(nn.Module):
         bbox_deltas = self.sigmoid(self.bbox_regressor(x))  # Normalize the output
 
         return bbox_deltas
+
+
+class MultiGPU_CNN(nn.Module):
+    def __init__(self):
+        super(MultiGPU_CNN, self).__init__()
+
+        # Convolutional layers on GPU 0
+        self.conv1 = nn.Conv2d(3, 16, kernel_size=3, stride=1, padding=1).to('cuda:0')
+        self.pool = nn.MaxPool2d(kernel_size=2, stride=2, padding=0).to('cuda:0')
+        self.act1 = nn.ReLU().to('cuda:0')
+
+        # Calculate output sizes
+        self.conv_output_size = (1000 - 3 + 2 * 1) // 1 + 1
+        self.pool_output_size = self.conv_output_size // 2
+
+        # Fully connected layers each on different GPUs
+        self.fc1 = nn.Linear(16 * self.pool_output_size * self.pool_output_size, 256).to('cuda:1')
+        self.act2 = nn.ELU().to('cuda:1')
+        self.fc2 = nn.Linear(256, 4).to('cuda:2')
+        self.act3 = nn.Sigmoid().to('cuda:2')
+
+        # Optimizer (needs careful handling in multi-GPU setup)
+        self.optimizer = optim.Adam(self.parameters(), lr=parameters.learning_rate, weight_decay=parameters.weight_decay)
+
+        # Loss function
+        self.loss_function = nn.MSELoss()
+
+    def forward(self, x):
+        # Convolutional part on GPU 0
+        x = x.to('cuda:0')
+        x = self.pool(self.act1(self.conv1(x)))
+
+        # Transition to GPU 1 for first fully connected layer
+        x = x.view(-1, 16 * self.pool_output_size * self.pool_output_size)
+        x = x.to('cuda:1')
+        x = self.act2(self.fc1(x))
+
+        # Transition to GPU 2 for second fully connected layer
+        x = x.to('cuda:2')
+        x = self.act3(self.fc2(x))
+
+        return x
+
