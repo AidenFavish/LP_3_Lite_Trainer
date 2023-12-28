@@ -190,6 +190,10 @@ class MultiGPU_CNN(nn.Module):
         self.pool = nn.MaxPool2d(kernel_size=2, stride=2, padding=0)
         self.act1 = nn.ReLU()
 
+        # Calculate output sizes
+        self.conv_output_size = (1000 - 3 + 2 * 1) // 1 + 1
+        self.pool_output_size = self.conv_output_size // 2
+
         # Fully connected layers
         self.fc1 = nn.Linear(16 * self.pool_output_size * self.pool_output_size, 256)
         self.act2 = nn.ELU()
@@ -204,10 +208,6 @@ class MultiGPU_CNN(nn.Module):
         self.act2.to('cuda:1')
         self.fc2.to('cuda:2')
         self.act3.to('cuda:2')
-
-        # Calculate output sizes
-        self.conv_output_size = (1000 - 3 + 2 * 1) // 1 + 1
-        self.pool_output_size = self.conv_output_size // 2
 
         # Optimizer and Loss function (initialize after moving layers)
         self.optimizer = optim.Adam(self.parameters(), lr=parameters.learning_rate, weight_decay=parameters.weight_decay)
