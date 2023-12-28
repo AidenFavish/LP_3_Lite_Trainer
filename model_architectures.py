@@ -186,24 +186,31 @@ class MultiGPU_CNN(nn.Module):
         super(MultiGPU_CNN, self).__init__()
 
         # Convolutional layers on GPU 0
-        self.conv1 = nn.Conv2d(3, 16, kernel_size=3, stride=1, padding=1).to('cuda:0')
-        self.pool = nn.MaxPool2d(kernel_size=2, stride=2, padding=0).to('cuda:0')
-        self.act1 = nn.ReLU().to('cuda:0')
+        self.conv1 = nn.Conv2d(3, 16, kernel_size=3, stride=1, padding=1)
+        self.pool = nn.MaxPool2d(kernel_size=2, stride=2, padding=0)
+        self.act1 = nn.ReLU()
+
+        # Fully connected layers
+        self.fc1 = nn.Linear(16 * self.pool_output_size * self.pool_output_size, 256)
+        self.act2 = nn.ELU()
+        self.fc2 = nn.Linear(256, 4)
+        self.act3 = nn.Sigmoid()
+
+        # Move layers to respective GPUs
+        self.conv1.to('cuda:0')
+        self.pool.to('cuda:0')
+        self.act1.to('cuda:0')
+        self.fc1.to('cuda:1')
+        self.act2.to('cuda:1')
+        self.fc2.to('cuda:2')
+        self.act3.to('cuda:2')
 
         # Calculate output sizes
         self.conv_output_size = (1000 - 3 + 2 * 1) // 1 + 1
         self.pool_output_size = self.conv_output_size // 2
 
-        # Fully connected layers each on different GPUs
-        self.fc1 = nn.Linear(16 * self.pool_output_size * self.pool_output_size, 256).to('cuda:1')
-        self.act2 = nn.ELU().to('cuda:1')
-        self.fc2 = nn.Linear(256, 4).to('cuda:2')
-        self.act3 = nn.Sigmoid().to('cuda:2')
-
-        # Optimizer (needs careful handling in multi-GPU setup)
+        # Optimizer and Loss function (initialize after moving layers)
         self.optimizer = optim.Adam(self.parameters(), lr=parameters.learning_rate, weight_decay=parameters.weight_decay)
-
-        # Loss function
         self.loss_function = nn.MSELoss()
 
     def forward(self, x):
