@@ -50,4 +50,4 @@ def validate(model, validate_loader, device):
             output = model(data)
 
             # print the validation results
-            print(f"[{batch_idx + 1}] predicted: {output} actual: {target}")
+            print(f"[{batch_idx + 1}] predicted: {output.tolist()[0]} actual: {target.tolist()[0]}")

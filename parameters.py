@@ -1,5 +1,5 @@
 # RUN INSTANCE PARAMETERS
-version = "v1-HuberLoss"
+version = "v1_HuberLoss"
 run_instance = "1.0"
 batch_print = 5
 force_device = ""
