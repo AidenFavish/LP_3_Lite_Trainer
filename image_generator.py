@@ -41,10 +41,10 @@ def generate_images(num_images, folder_path, csv_filename):
             img.save(os.path.join(folder_path, img_name))
 
             # Write the square's details to the CSV
-            writer.writerow([i, center_x, center_y, square_size // 2, 0])
+            writer.writerow([i, center_x / 1000.0, center_y / 1000.0, square_size // 2 / 1000.0, 0])
 
     print(f"Generated {num_images} images in folder '{folder_path}' with CSV file '{csv_filename}'")
 
 
-# Example usage
+generate_images(num_images=500, folder_path=r'/home/penny/Desktop/LP_Training/TrainingData1', csv_filename='data.csv')
 generate_images(num_images=10, folder_path=r'/home/penny/Desktop/LP_Training/ValidationData1', csv_filename='data.csv')

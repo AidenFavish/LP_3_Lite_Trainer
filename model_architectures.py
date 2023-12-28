@@ -80,7 +80,7 @@ class ImprovedCNN(nn.Module):
         self.optimizer = optim.Adam(self.parameters(), lr=parameters.learning_rate)
 
         # Loss function
-        self.loss_function = nn.KLDivLoss()
+        self.loss_function = nn.SmoothL1Loss()
 
     def forward(self, x):
         x = self.batchnorm1(self.conv1(x))
