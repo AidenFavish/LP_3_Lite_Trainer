@@ -26,17 +26,17 @@ class DefaultCNN(nn.Module):
         super(DefaultCNN, self).__init__()
 
         # Convolutional layers
-        self.conv1 = nn.Conv2d(3, 16, kernel_size=3, stride=1, padding=1)
+        self.conv1 = nn.Conv2d(3, 16, kernel_size=3, stride=2, padding=1)
         self.pool = nn.MaxPool2d(kernel_size=2, stride=2, padding=0)
 
         # Calculate output: conv_output = (input - kernel_size + 2 * padding) / stride + 1
-        self.conv_output_size = (1000 - 3 + 2 * 1) // 1 + 1
+        self.conv_output_size = (1000 - 3 + 2 * 1) // 2 + 1
         # Calculate pooling output size: pool_output = (conv_output - kernel_size) / stride + 1
         self.pool_output_size = self.conv_output_size // 2
 
         # Fully connected layers
-        self.fc1 = nn.Linear(16 * self.pool_output_size * self.pool_output_size, 256)
-        self.fc2 = nn.Linear(256, 4)
+        self.fc1 = nn.Linear(16 * self.pool_output_size * self.pool_output_size, 32)
+        self.fc2 = nn.Linear(32, 4)
 
         # Activation functions
         self.act1 = nn.ReLU()
@@ -56,7 +56,7 @@ class DefaultCNN(nn.Module):
         # pass the input through the layers
         x = self.pool(self.act1(self.conv1(x)))
         x = x.view(-1, 16 * self.pool_output_size * self.pool_output_size)
-        x = self.act2(self.fc1(x))
+        x = self.act3(self.fc1(x))
         x = self.act3(self.fc2(x))
         return x
 

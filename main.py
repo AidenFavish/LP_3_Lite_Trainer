@@ -12,7 +12,7 @@ import torch.nn as nn
 # Main function
 def main():
     # DEFAULT MODEL
-    default_model = model_architectures.MultiGPU_CNN()
+    default_model = model_architectures.DefaultCNN()
 
     # Ask user to train a new model or load an existing one
     load_input = input(
@@ -36,7 +36,7 @@ def main():
         train_loader = DataLoader(dataset=training_dataset, batch_size=parameters.batch_size, shuffle=True)
 
         # Train the model
-        trainer.train2(model, train_loader)
+        trainer.train(model, train_loader, device)
 
         # Offer to save the model after training or automatically save it
         if parameters.automate_save != "":
