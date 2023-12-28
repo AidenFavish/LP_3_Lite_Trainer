@@ -31,6 +31,7 @@ def main():
     # Check for parallel processing
     if parameters.parallel_processing and torch.cuda.device_count() > 1:
         model = nn.DataParallel(model)
+        print("Parallel processing enabled.\n")
 
     # Skips training if the user wants to only validate otherwise trains and saves model here
     if not parameters.only_validate:
