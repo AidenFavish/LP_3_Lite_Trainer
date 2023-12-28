@@ -89,7 +89,7 @@ class ImprovedCNN(nn.Module):
         x = self.act1(self.pool(x))
         x = self.dropout(x)
         x = x.view(-1, 32 * self.pool_output_size * self.pool_output_size)
-        print("after dropout: ", x.getlist())
+        print("after dropout: ", x.tolist())
         x = self.act1(self.fc1(x))
         x = self.act2(self.fc2(x))
         return x
