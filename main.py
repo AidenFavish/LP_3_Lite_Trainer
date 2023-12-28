@@ -28,6 +28,10 @@ def main():
     device = model_tools.get_device()
     model.to(device)  # Move the model to the MPS device or CPU
 
+    # Check for parallel processing
+    if parameters.parallel_processing and torch.cuda.device_count() > 1:
+        model = nn.DataParallel(model)
+
     # Skips training if the user wants to only validate otherwise trains and saves model here
     if not parameters.only_validate:
         # Load training data
@@ -37,6 +41,10 @@ def main():
 
         # Train the model
         trainer.train(model, train_loader, device)
+
+        # Save the non-parallel model
+        if parameters.parallel_processing:
+            model = model.module
 
         # Offer to save the model after training or automatically save it
         if parameters.automate_save != "":
