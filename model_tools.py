@@ -1,5 +1,6 @@
+import os
 import torch
-
+import torch.distributed as dist
 import parameters
 
 
@@ -55,3 +56,13 @@ def validate(model, validate_loader, device):
             print(f"[{batch_idx + 1}] actual: {target.tolist()[0]}")
             print(f"\033[1;34m[{batch_idx + 1}] difference: {(target - output).pow(2).sqrt().tolist()[0]}\033[0m")
             print("--------------------------------------------------------\n")
+
+
+def setup(rank, world_size):
+    os.environ['MASTER_ADDR'] = 'localhost'
+    os.environ['MASTER_PORT'] = '12355'
+    dist.init_process_group("nccl", rank=rank, world_size=world_size)
+
+
+def cleanup():
+    dist.destroy_process_group()

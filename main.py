@@ -30,20 +30,22 @@ def main():
 
     # Check for parallel processing
     if parameters.parallel_processing and torch.cuda.is_available() and torch.cuda.device_count() > 1:
-        model = nn.DataParallel(model)
         print("Parallel processing enabled.\n")
     elif parameters.parallel_processing:
         print("Parallel processing not available.\n")
+        parameters.parallel_processing = False
 
     # Skips training if the user wants to only validate otherwise trains and saves model here
     if not parameters.only_validate:
         # Load training data
         training_dataset = dataset_loader.LPDataset1(project_dir=parameters.training_folder,
                                                      transform=transforms.ToTensor())
-        train_loader = DataLoader(dataset=training_dataset, batch_size=parameters.batch_size, shuffle=True, num_workers=4)
+        train_loader = DataLoader(dataset=training_dataset, batch_size=parameters.batch_size, shuffle=True,
+                                  num_workers=2)
 
         # Train the model
-        trainer.train(model, train_loader, device)
+        # trainer.train(model, train_loader, device)  # Standard training
+        trainer.mp_train(model, train_loader)  # Multi-processing training
 
         # Save the non-parallel model
         if parameters.parallel_processing:
