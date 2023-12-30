@@ -4,11 +4,17 @@ import random
 from PIL import Image, ImageDraw
 
 
-def generate_images(num_images, folder_path, csv_filename):
+def generate_images(x, folder_path, csv_filename):
     """
     Function to generate images and a CSV file with the image details.
     Each image will have a random background color and a randomly positioned and sized square with a random color.
     """
+    scatter_mode = True
+    if x is int:
+        num_images = x
+        scatter_mode = False
+    else:
+        num_images = len(x)
 
     # Create the directory if it does not exist
     os.makedirs(folder_path, exist_ok=True)
@@ -26,10 +32,16 @@ def generate_images(num_images, folder_path, csv_filename):
             # Random square properties
             square_color = (random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
             square_size = random.randint(50, 200)
-            top_left_x = random.randint(0, 1000 - square_size)
-            top_left_y = random.randint(0, 1000 - square_size)
-            center_x = top_left_x + square_size // 2
-            center_y = top_left_y + square_size // 2
+            if scatter_mode:
+                top_left_x = x[i][0] - square_size // 2
+                top_left_y = x[i][1] - square_size // 2
+                center_x = x[i][0]
+                center_y = x[i][1]
+            else:
+                top_left_x = random.randint(0, 1000 - square_size)
+                top_left_y = random.randint(0, 1000 - square_size)
+                center_x = top_left_x + square_size // 2
+                center_y = top_left_y + square_size // 2
 
             # Draw the square
             draw = ImageDraw.Draw(img)
@@ -47,5 +59,32 @@ def generate_images(num_images, folder_path, csv_filename):
     print(f"Generated {num_images} images in folder '{folder_path}' with CSV file '{csv_filename}'")
 
 
-generate_images(num_images=500, folder_path=r'/home/penny/Desktop/LP_Training/TrainingData1', csv_filename='data.csv')
-generate_images(num_images=10, folder_path=r'/home/penny/Desktop/LP_Training/ValidationData1', csv_filename='data.csv')
+def scatter_v1():
+    points = []
+    size = 50
+    for v in range((size // 2)):
+        currV = 8 * v
+        ctr = 0
+        for t in range(currV):
+            if ctr + 1 == (size // 2 + 1) // (v + 1):
+                if (0 <= t <= v) or (7 * v <= t < 8 * v):
+                    x = size // 2 + v
+                    y = t + size // 2 if t <= v else size // 2 - (8 * v - t)
+                elif v < t < 3 * v:
+                    x = t - 2 * v + size // 2
+                    y = size // 2 + v
+                elif 3 * v <= t <= 5 * v:
+                    x = size // 2 - v
+                    y = 4 * v - t + size // 2
+                else:
+                    x = 6 * v - t + size // 2
+                    y = size // 2 - v
+                points.append((18 * x, 18 * y))
+                ctr = -1
+            ctr += 1
+
+    return points
+
+
+generate_images(x=scatter_v1(), folder_path=r'/home/penny/Desktop/LP_Training/TrainingData2', csv_filename='data.csv')
+generate_images(x=10, folder_path=r'/home/penny/Desktop/LP_Training/ValidationData2', csv_filename='data.csv')
