@@ -1,5 +1,5 @@
 # RUN INSTANCE PARAMETERS
-version = "v4_BestFit"
+version = "v5"
 run_instance = "1.0"
 batch_print = 10
 force_device = ""
@@ -8,13 +8,13 @@ only_validate = False
 parallel_processing = False
 
 # LOCAL ACCESS PARAMETERS
-training_folder = "/home/penny/Desktop/LP_Training/TrainingData2"
-model_path = "/home/penny/Desktop/LP_Training/v4_BestFit.pth"
-save_as = "/home/penny/Desktop/LP_Training/v4_BestFit.pth"
+training_folder = "/home/penny/Desktop/LP_Training/TrainingData3"
+model_path = "/home/penny/Desktop/LP_Training/v5.pth"
+save_as = "/home/penny/Desktop/LP_Training/v5.pth"
 validation_folder = "/home/penny/Desktop/LP_Training/ValidationData1"
 
 # HYPERPARAMETERS
-learning_rate = 0.0015
+learning_rate = 0.001
 weight_decay = 1e-5
 batch_size = 25
 num_epochs = 50

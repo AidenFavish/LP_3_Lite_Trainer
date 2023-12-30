@@ -85,5 +85,5 @@ def scatter_v1():
     return points
 
 
-generate_images(x=500, folder_path=r'/home/penny/Desktop/LP_Training/TrainingData2', csv_filename='data.csv')
+generate_images(x=1500, folder_path=r'/home/penny/Desktop/LP_Training/TrainingData3', csv_filename='data.csv')
 generate_images(x=10, folder_path=r'/home/penny/Desktop/LP_Training/ValidationData2', csv_filename='data.csv')
