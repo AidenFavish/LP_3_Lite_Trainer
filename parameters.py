@@ -17,4 +17,4 @@ validation_folder = "/home/penny/Desktop/LP_Training/ValidationData1"
 learning_rate = 0.001
 weight_decay = 1e-5
 batch_size = 25
-num_epochs = 2
+num_epochs = 25
