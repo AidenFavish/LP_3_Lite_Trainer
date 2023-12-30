@@ -218,6 +218,6 @@ class PFLoss(nn.Module):
 
     def forward(self, predictions, targets):
         condition = torch.logical_and(predictions > 0, predictions < 1)
-        bell_difference = torch.where(condition, (predictions - targets).pow(8), 0.5 * torch.e ** (-555.555 * (predictions - 0.5) ** 2) + 1)
-        loss = torch.mean((predictions - targets) ** 2 + bell_difference)
+        bell_difference = torch.where(condition, (predictions - targets).pow(8), 2 * torch.e ** (-555.555 * (predictions - 0.5) ** 2) + 1)
+        loss = torch.mean((predictions - targets) ** 4 + bell_difference)
         return loss
