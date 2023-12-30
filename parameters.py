@@ -9,8 +9,8 @@ parallel_processing = False
 
 # LOCAL ACCESS PARAMETERS
 training_folder = "/home/penny/Desktop/LP_Training/TrainingData2"
-model_path = "/home/penny/Desktop/LP_Training/v3_BestFit.pth"
-save_as = "/home/penny/Desktop/LP_Training/v3_BestFit.pth"
+model_path = "/home/penny/Desktop/LP_Training/v4_BestFit.pth"
+save_as = "/home/penny/Desktop/LP_Training/v4_BestFit.pth"
 validation_folder = "/home/penny/Desktop/LP_Training/ValidationData1"
 
 # HYPERPARAMETERS
