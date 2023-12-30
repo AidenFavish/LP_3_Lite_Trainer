@@ -225,6 +225,7 @@ class PFLoss(nn.Module):
         # Calculate the diversity penalty
         # The penalty is applied if the standard deviation is lower than the threshold
         diversity_penalty = torch.where(std_dev < self.min_std_dev, 1 + 1 / torch.abs(std_dev), torch.zeros_like(std_dev)).mean()
+        components = [torch.mean((predictions - targets) ** 4), 2 * torch.mean(diversity_penalty)]
 
-        loss = torch.sum(torch.abs(predictions - targets) + diversity_penalty)
-        return loss
+        loss = torch.mean((predictions - targets) ** 4) + 2 * torch.mean(diversity_penalty)
+        return loss, components
