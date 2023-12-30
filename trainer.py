@@ -68,14 +68,15 @@ def mp_train_helper(rank, world_size):
     num_epochs = parameters.num_epochs
 
     # Create model, optimizer, and dataloader
-    model = model_architectures.ImprovedCNN()  # Your model
+    model = model_architectures.ImprovedCNN().to(rank)  # Your model
     optimizer = model.optimizer  # Your optimizer
     criterion = model.loss_function  # Your loss function
+
     ddp_model = DDP(model, device_ids=[rank])
     training_dataset = dataset_loader.LPDataset1(project_dir=parameters.training_folder,
                                                  transform=transforms.ToTensor())
     sampler = DistributedSampler(training_dataset, num_replicas=world_size, rank=rank)
-    dataloader = DataLoader(training_dataset, batch_size=..., sampler=sampler)
+    dataloader = DataLoader(training_dataset, batch_size=parameters.batch_size, sampler=sampler)
 
     for epoch in range(num_epochs):
         sampler.set_epoch(epoch)
@@ -85,7 +86,7 @@ def mp_train_helper(rank, world_size):
         #running_loss = 0.0  # Loss for the epoch
         for i, data in enumerate(dataloader, 0):
             inputs, labels = data
-            #inputs, labels = inputs.to(rank), labels.to(rank)
+            inputs, labels = inputs.to(rank), labels.to(rank)
 
             optimizer.zero_grad()
             outputs = ddp_model(inputs)
@@ -108,6 +109,8 @@ def mp_train_helper(rank, world_size):
         #     f"------------------------------------------\n\033[1;31mEpoch {epoch + 1} finished. Average Loss: {running_loss / len(dataloader)}\033[0m")
         # seconds = int(duration * (num_epochs - epoch - 1))
         # print(f"\033[1;33mETA: {seconds // 60} minutes and {seconds % 60} seconds\033[0m\n")
+
+    model_tools.cleanup()
 
 
 def mp_train():
