@@ -6,6 +6,9 @@ import torch
 import model_tools
 import parameters
 import time
+import model_architectures
+import dataset_loader
+from torchvision import transforms
 
 
 # Trains the model
@@ -56,11 +59,6 @@ def train(model, dataloader, device):
         print(f"\033[1;33mETA: {seconds // 60} minutes and {seconds % 60} seconds\033[0m\n")
 
 
-# for the multi trainer
-model = None
-train_loader = None
-
-
 def mp_train_helper(rank, world_size):
     print("Starting Multi-Processing Training...")
 
@@ -70,14 +68,14 @@ def mp_train_helper(rank, world_size):
     num_epochs = parameters.num_epochs
 
     # Create model, optimizer, and dataloader
-    global model  # Your model
+    model = model_architectures.ImprovedCNN()  # Your model
     optimizer = model.optimizer  # Your optimizer
     criterion = model.loss_function  # Your loss function
-    model = model.to(rank)
     ddp_model = DDP(model, device_ids=[rank])
-    global train_loader  # Your dataset
-    sampler = DistributedSampler(train_loader, num_replicas=world_size, rank=rank)
-    dataloader = DataLoader(train_loader, batch_size=..., sampler=sampler)
+    training_dataset = dataset_loader.LPDataset1(project_dir=parameters.training_folder,
+                                                 transform=transforms.ToTensor())
+    sampler = DistributedSampler(training_dataset, num_replicas=world_size, rank=rank)
+    dataloader = DataLoader(training_dataset, batch_size=..., sampler=sampler)
 
     for epoch in range(num_epochs):
         sampler.set_epoch(epoch)
@@ -112,10 +110,6 @@ def mp_train_helper(rank, world_size):
         print(f"\033[1;33mETA: {seconds // 60} minutes and {seconds % 60} seconds\033[0m\n")
 
 
-def mp_train(model1, train_loader1):
-    global model
-    global train_loader
-    model = model1
-    train_loader = train_loader1
+def mp_train():
     world_size = torch.cuda.device_count()
     mp.spawn(mp_train_helper, args=(world_size,), nprocs=world_size, join=True)
