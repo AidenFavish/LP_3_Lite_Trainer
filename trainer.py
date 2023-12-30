@@ -85,7 +85,7 @@ def mp_train_helper(rank, world_size):
         #running_loss = 0.0  # Loss for the epoch
         for i, data in enumerate(dataloader, 0):
             inputs, labels = data
-            inputs, labels = inputs.to(rank), labels.to(rank)
+            #inputs, labels = inputs.to(rank), labels.to(rank)
 
             optimizer.zero_grad()
             outputs = ddp_model(inputs)
