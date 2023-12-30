@@ -60,10 +60,10 @@ def train(model, dataloader, device):
 
 
 def mp_train_helper(rank, world_size):
-    print("Starting Multi-Processing Training...")
+    #print("Starting Multi-Processing Training...")
 
     # Setup
-    writer = SummaryWriter(f"runs/{parameters.version}/{parameters.run_instance}")  # Tensorboard writer
+    #writer = SummaryWriter(f"runs/{parameters.version}/{parameters.run_instance}")  # Tensorboard writer
     model_tools.setup(rank, world_size)
     num_epochs = parameters.num_epochs
 
@@ -79,10 +79,10 @@ def mp_train_helper(rank, world_size):
 
     for epoch in range(num_epochs):
         sampler.set_epoch(epoch)
-        print("------------------------------------------")
+        #print("------------------------------------------")
 
-        start_time = time.time()
-        running_loss = 0.0  # Loss for the epoch
+        #start_time = time.time()
+        #running_loss = 0.0  # Loss for the epoch
         for i, data in enumerate(dataloader, 0):
             inputs, labels = data
             inputs, labels = inputs.to(rank), labels.to(rank)
@@ -93,23 +93,24 @@ def mp_train_helper(rank, world_size):
             loss.backward()
             optimizer.step()
 
-            running_loss += loss.item()
-
-            avg_loss = running_loss / (i + 1)  # Average loss for the epoch so far
-            writer.add_scalar('training loss', avg_loss, epoch * len(dataloader) + i)
-            if i == len(dataloader) - 1:
-                print(
-                    f'[{epoch + 1}, {i + 1}] avg loss: {avg_loss:.3f}\nEpoch mini-test:\npredict: {outputs.tolist()[0]}\nactual: {labels.tolist()[0]}')
-            elif i % parameters.batch_print == 0:
-                print(f'[{epoch + 1}, {i + 1}] avg loss: {avg_loss:.3f}')
-
-        duration = time.time() - start_time
-        print(
-            f"------------------------------------------\n\033[1;31mEpoch {epoch + 1} finished. Average Loss: {running_loss / len(dataloader)}\033[0m")
-        seconds = int(duration * (num_epochs - epoch - 1))
-        print(f"\033[1;33mETA: {seconds // 60} minutes and {seconds % 60} seconds\033[0m\n")
+        #     running_loss += loss.item()
+        #
+        #     avg_loss = running_loss / (i + 1)  # Average loss for the epoch so far
+        #     writer.add_scalar('training loss', avg_loss, epoch * len(dataloader) + i)
+        #     if i == len(dataloader) - 1:
+        #         print(
+        #             f'[{epoch + 1}, {i + 1}] avg loss: {avg_loss:.3f}\nEpoch mini-test:\npredict: {outputs.tolist()[0]}\nactual: {labels.tolist()[0]}')
+        #     elif i % parameters.batch_print == 0:
+        #         print(f'[{epoch + 1}, {i + 1}] avg loss: {avg_loss:.3f}')
+        #
+        # duration = time.time() - start_time
+        # print(
+        #     f"------------------------------------------\n\033[1;31mEpoch {epoch + 1} finished. Average Loss: {running_loss / len(dataloader)}\033[0m")
+        # seconds = int(duration * (num_epochs - epoch - 1))
+        # print(f"\033[1;33mETA: {seconds // 60} minutes and {seconds % 60} seconds\033[0m\n")
 
 
 def mp_train():
+    print("Starting Multi-Processing Training...")
     world_size = torch.cuda.device_count()
     mp.spawn(mp_train_helper, args=(world_size,), nprocs=world_size, join=True)
