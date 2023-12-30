@@ -61,7 +61,7 @@ def generate_images(x, folder_path, csv_filename):
 
 def scatter_v1():
     points = []
-    size = 50
+    size = 250
     for v in range((size // 2)):
         currV = 8 * v
         ctr = 0
@@ -79,9 +79,12 @@ def scatter_v1():
                 else:
                     x = 6 * v - t + size // 2
                     y = size // 2 - v
-                points.append((18 * x, 18 * y))
+                points.append((10 * x, 10 * y))
                 ctr = -1
             ctr += 1
+
+    # Filter
+    points = [[point[0] - 725, point[1] - 725] for point in points if 725 <= point[0] <= 1775 and 725 <= point[1] <= 1775]
 
     return points
 
