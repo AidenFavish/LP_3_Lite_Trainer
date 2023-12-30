@@ -45,7 +45,7 @@ def main():
 
         # Train the model
         # trainer.train(model, train_loader, device)  # Standard training
-        trainer.mp_train(model, train_loader)  # Multi-processing training
+        trainer.mp_train()  # Multi-processing training
 
         # Save the non-parallel model
         if parameters.parallel_processing:
