@@ -1,5 +1,5 @@
 # RUN INSTANCE PARAMETERS
-version = "v3_BestFit"
+version = "v4_BestFit"
 run_instance = "1.0"
 batch_print = 10
 force_device = ""
@@ -14,7 +14,7 @@ save_as = "/home/penny/Desktop/LP_Training/v3_BestFit.pth"
 validation_folder = "/home/penny/Desktop/LP_Training/ValidationData1"
 
 # HYPERPARAMETERS
-learning_rate = 0.001
-weight_decay = 1e-5
+learning_rate = 0.002
+weight_decay = 1e-6
 batch_size = 25
 num_epochs = 25
