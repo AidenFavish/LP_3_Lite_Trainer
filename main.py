@@ -40,7 +40,7 @@ def main():
         # Load training data
         training_dataset = dataset_loader.LPDataset1(project_dir=parameters.training_folder,
                                                      transform=transforms.ToTensor())
-        train_loader = DataLoader(dataset=training_dataset, batch_size=parameters.batch_size, shuffle=True, num_workers=5)
+        train_loader = DataLoader(dataset=training_dataset, batch_size=parameters.batch_size, shuffle=True, num_workers=4)
 
         # Train the model
         trainer.train(model, train_loader, device)
