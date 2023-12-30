@@ -227,5 +227,5 @@ class PFLoss(nn.Module):
         diversity_penalty = torch.where(std_dev < self.min_std_dev, 1 + 1 / torch.abs(std_dev), torch.zeros_like(std_dev)).mean()
         components = [torch.mean((predictions - targets) ** 4), 2 * torch.mean(diversity_penalty)]
 
-        loss = torch.mean((predictions - targets) ** 4) + 2 * torch.mean(diversity_penalty)
+        loss = 2 * torch.mean((predictions - targets) ** 2) + 0.5 * torch.mean(diversity_penalty)
         return loss, components
