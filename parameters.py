@@ -1,6 +1,6 @@
 # RUN INSTANCE PARAMETERS
 version = "v5"
-run_instance = "1.0"
+run_instance = "1.1"
 batch_print = 10
 force_device = ""
 automate_save = ""
