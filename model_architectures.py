@@ -213,11 +213,18 @@ class EnhancedFasterRCNNNetwork(nn.Module):
 
 
 class PFLoss(nn.Module):
-    def __init__(self):
+    def __init__(self, diversity_factor=0.1, min_std_dev=0.3):
         super(PFLoss, self).__init__()
+        self.diversity_factor = diversity_factor
+        self.min_std_dev = min_std_dev
 
     def forward(self, predictions, targets):
-        condition = torch.logical_and(predictions < 0, predictions > 1)
-        bell_difference = torch.where(condition, (predictions - targets).pow(8), torch.e ** (-555.555 * (predictions - 0.5) ** 2) + 1)
-        loss = torch.sum(torch.abs(predictions - targets) + bell_difference)
+        # Compute the standard deviation of the predictions
+        std_dev = predictions.std(dim=0)
+
+        # Calculate the diversity penalty
+        # The penalty is applied if the standard deviation is lower than the threshold
+        diversity_penalty = torch.where(std_dev < self.min_std_dev * predictions.mean(dim=0), self.diversity_factor * (self.min_std_dev * predictions.mean(dim=0) - std_dev),torch.zeros_like(std_dev)).mean()
+
+        loss = torch.sum(torch.abs(predictions - targets) + diversity_penalty)
         return loss
