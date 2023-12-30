@@ -5,7 +5,7 @@ batch_print = 10
 force_device = ""
 automate_save = ""
 only_validate = False
-parallel_processing = True
+parallel_processing = False
 
 # LOCAL ACCESS PARAMETERS
 training_folder = "/home/penny/Desktop/LP_Training/TrainingData2"
