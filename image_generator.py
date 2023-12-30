@@ -9,12 +9,8 @@ def generate_images(x, folder_path, csv_filename):
     Function to generate images and a CSV file with the image details.
     Each image will have a random background color and a randomly positioned and sized square with a random color.
     """
-    scatter_mode = True
-    if x is int:
-        num_images = x
-        scatter_mode = False
-    else:
-        num_images = len(x)
+    num_images = x
+    scatter_mode = False
 
     # Create the directory if it does not exist
     os.makedirs(folder_path, exist_ok=True)
@@ -89,5 +85,5 @@ def scatter_v1():
     return points
 
 
-generate_images(x=scatter_v1(), folder_path=r'/home/penny/Desktop/LP_Training/TrainingData2', csv_filename='data.csv')
+generate_images(x=500, folder_path=r'/home/penny/Desktop/LP_Training/TrainingData2', csv_filename='data.csv')
 generate_images(x=10, folder_path=r'/home/penny/Desktop/LP_Training/ValidationData2', csv_filename='data.csv')
