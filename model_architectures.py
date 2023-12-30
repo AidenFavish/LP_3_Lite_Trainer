@@ -213,7 +213,7 @@ class EnhancedFasterRCNNNetwork(nn.Module):
 
 
 class PFLoss(nn.Module):
-    def __init__(self, diversity_factor=0.1, min_std_dev=0.3):
+    def __init__(self, diversity_factor=1.0, min_std_dev=0.3):
         super(PFLoss, self).__init__()
         self.diversity_factor = diversity_factor
         self.min_std_dev = min_std_dev
