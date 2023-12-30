@@ -1,7 +1,7 @@
 import torch.nn as nn
 import torch.optim as optim
 import torchvision.models
-
+import torch
 import parameters
 
 
@@ -78,7 +78,7 @@ class ImprovedCNN(nn.Module):
         self.optimizer = optim.Adam(self.parameters(), lr=parameters.learning_rate)
 
         # Loss function
-        self.loss_function = nn.SmoothL1Loss()
+        self.loss_function = PFLoss()
 
     def forward(self, x):
         x = self.act1(self.conv1(x))
@@ -210,3 +210,14 @@ class EnhancedFasterRCNNNetwork(nn.Module):
         bbox_deltas = self.sigmoid(self.bbox_regressor(x))  # Normalize the output
 
         return bbox_deltas
+
+
+class PFLoss(nn.Module):
+    def __init__(self):
+        super(PFLoss, self).__init__()
+
+    def forward(self, predictions, targets):
+        condition = 0 < predictions < 1
+        bell_difference = torch.where(condition, (predictions - targets).pow(8), 0.5 * torch.e ** (-555.555 * (predictions - 0.5) ** 2) + 1)
+        loss = torch.mean((predictions - targets) ** 2 + bell_difference)
+        return loss
