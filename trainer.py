@@ -47,9 +47,9 @@ def train(model, dataloader, device):
             avg_loss = running_loss / (i + 1)  # Average loss for the epoch so far
             writer.add_scalar('training loss', avg_loss, epoch * len(dataloader) + i)
             if i == len(dataloader) - 1:
-                print(f'[{epoch + 1}, {i + 1}] avg loss: {avg_loss:.3f}, components: {components.tolist()}\nEpoch mini-test:\npredict: {outputs.tolist()[0]}\nactual: {labels.tolist()[0]}')
+                print(f'[{epoch + 1}, {i + 1}] avg loss: {avg_loss:.3f}, components: [{components[0].item()}, {components[1].item()}]\nEpoch mini-test:\npredict: {outputs.tolist()[0]}\nactual: {labels.tolist()[0]}')
             elif i % parameters.batch_print == 0:
-                print(f'[{epoch + 1}, {i + 1}] avg loss: {avg_loss:.3f}, components: {components.tolist()}')
+                print(f'[{epoch + 1}, {i + 1}] avg loss: {avg_loss:.3f}, components: [{components[0].item()}, {components[1].item()}]')
 
         duration = time.time() - start_time
         print(
