@@ -11,7 +11,7 @@ parallel_processing = False
 training_folder = "/home/penny/Desktop/LP_Training/TrainingData2"
 model_path = "/home/penny/Desktop/LP_Training/v3_BestFit.pth"
 save_as = "/home/penny/Desktop/LP_Training/v3_BestFit.pth"
-validation_folder = "/home/penny/Desktop/LP_Training/ValidationData2"
+validation_folder = "/home/penny/Desktop/LP_Training/ValidationData1"
 
 # HYPERPARAMETERS
 learning_rate = 0.001
