@@ -14,7 +14,7 @@ save_as = "/home/penny/Desktop/LP_Training/v4_BestFit.pth"
 validation_folder = "/home/penny/Desktop/LP_Training/ValidationData1"
 
 # HYPERPARAMETERS
-learning_rate = 0.002
-weight_decay = 1e-6
+learning_rate = 0.0015
+weight_decay = 1e-5
 batch_size = 25
 num_epochs = 50
