@@ -185,8 +185,8 @@ class EnhancedFasterRCNNNetwork(nn.Module):
         # In practice, use operations like RoIPool or RoIAlign
 
         # Classifier and Bounding Box Regressor
-        self.classifier = nn.Linear(512 * 7 * 7, 1024)
-        self.bbox_regressor = nn.Linear(1024, 4)  # 4 outputs for normalized coordinates
+        self.classifier = nn.Linear(512 * 7 * 7, 512)
+        self.bbox_regressor = nn.Linear(512, 4)  # 4 outputs for normalized coordinates
 
         # Activation Functions
         self.relu = nn.ReLU()
@@ -194,6 +194,11 @@ class EnhancedFasterRCNNNetwork(nn.Module):
 
         # Loss Function
         # Faster R-CNN uses a combination of classification loss and bounding box regression loss
+        # Optimizer
+        self.optimizer = optim.Adam(self.parameters(), lr=parameters.learning_rate)
+
+        # Loss function
+        self.loss_function = PFLoss()
 
     def forward(self, x):
         # Feature extraction
