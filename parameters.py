@@ -8,13 +8,13 @@ only_validate = False
 parallel_processing = False
 
 # LOCAL ACCESS PARAMETERS
-training_folder = r"C:\Users\aiden\OneDrive\Desktop\Training1"
-model_path = "/home/penny/Desktop/LP_Training/v5.pth"
-save_as = "/home/penny/Desktop/LP_Training/v5.pth"
-validation_folder = "/home/penny/Desktop/LP_Training/ValidationData1"
+training_folder = r"/Users/aiden/Desktop/Training/Training1"
+model_path = "/Users/aiden/Desktop/Training/v5.pth"
+save_as = "/Users/aiden/Desktop/Training/v5.pth"
+validation_folder = "/Users/aiden/Desktop/Training/Validation1"
 
 # HYPERPARAMETERS
-learning_rate = 0.001
+learning_rate = 0.005
 weight_decay = 1e-5
 batch_size = 25
 num_epochs = 50

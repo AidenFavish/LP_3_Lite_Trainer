@@ -35,7 +35,7 @@ class ImprovedCNN(nn.Module):
         self.act2 = nn.Sigmoid()
 
         # Optimizer
-        self.optimizer = optim.Adam(self.parameters(), lr=parameters.learning_rate)
+        self.optimizer = optim.SGD(self.parameters(), lr=parameters.learning_rate)
 
         # Loss function
         self.loss_function = PFLoss()
@@ -54,19 +54,29 @@ class ImprovedCNN(nn.Module):
 
 
 class PFLoss(nn.Module):
-    def __init__(self, diversity_factor=1.0, min_std_dev=0.3):
+    def __init__(self, diversity_factor=1.0, min_std_dev=0.5):
         super(PFLoss, self).__init__()
         self.diversity_factor = diversity_factor
         self.min_std_dev = min_std_dev
 
     def forward(self, predictions, targets):
-        # Compute the standard deviation of the predictions
-        std_dev = predictions.std(dim=0)
-
         # Calculate the diversity penalty
         # The penalty is applied if the standard deviation is lower than the threshold
-        diversity_penalty = torch.where(std_dev < self.min_std_dev, 1 + 1 / torch.abs(std_dev), torch.zeros_like(std_dev)).mean()
-        components = [10 * torch.mean(10 ** torch.abs(predictions - targets) - 1), 0.3 * torch.mean(diversity_penalty)]
+        xp = predictions[:, :1]
+        yp = predictions[:, 1:2]
+        rp = predictions[:, 2:3]
+        xt = targets[:, :1]
+        yt = targets[:, 1:2]
+        rt = targets[:, 2:3]
+        xpstd = torch.std(xp)
+        ypstd = torch.std(yp)
+        rpstd = torch.std(rp)
+        xtstd = torch.std(xt)
+        ytstd = torch.std(yt)
+        rtstd = torch.std(rt)
 
-        loss = components[0] + components[1]
-        return loss, components
+        lossMSE = torch.mean(2 ** torch.abs(xp - xt)) + torch.mean(2 ** torch.abs(yp - yt)) + torch.mean(2 ** torch.abs(rp - rt))
+        lossSTD = torch.mean(2 ** torch.abs(xpstd - xtstd)) + torch.mean(2 ** torch.abs(ypstd - ytstd)) + torch.mean(2 ** torch.abs(rpstd - rtstd))
+        loss = lossMSE + lossSTD
+
+        return loss, [lossMSE.item(), lossSTD.item()]
