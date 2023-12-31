@@ -12,7 +12,7 @@ import torch.nn as nn
 # Main function
 def main():
     # DEFAULT MODEL
-    default_model = model_architectures.IdentityNetwork()
+    default_model = model_architectures.ImprovedCNN()
 
     # Ask user to train a new model or load an existing one
     load_input = input(

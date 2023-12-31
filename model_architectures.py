@@ -27,7 +27,7 @@ class ImprovedCNN(nn.Module):
         self.pool_output_size = 62  # magic number
 
         # Fully connected layers
-        self.fc1 = nn.Linear(32 * self.pool_output_size * self.pool_output_size, 42)
+        self.fc1 = nn.Linear(32 * self.pool_output_size * self.pool_output_size + 16 * 250 * 250, 42)
         self.fc2 = nn.Linear(42, 4)
 
         # Activation functions
@@ -42,82 +42,14 @@ class ImprovedCNN(nn.Module):
 
     def forward(self, x):
         x = self.act1(self.conv1(x))
-        x = self.act1(self.pool(x))
-        x = self.act1(self.conv2(x))
+        x2 = self.act1(self.pool(x))
+        x = self.act1(self.conv2(x2))
         x = self.act1(self.pool(x))
         x = self.dropout(x)
         x = x.view(-1, 32 * self.pool_output_size * self.pool_output_size)
-        x = self.act2(self.fc1(x))
+        x2 = x2.view(-1, 16 * 250 * 250)
+        x = self.act2(self.fc1(torch.cat((x, x2), dim=1)))
         x = self.act2(self.fc2(x))
-        return x
-
-
-class IdentityNetwork(nn.Module):
-    """
-    Custom CNN architecture.
-    Sequence: Convolution -> ReLU -> MaxPool -> Convolution -> Identity Block ->
-              Linear -> ReLU -> Linear -> Sigmoid.
-    Outputs a 4-dimensional vector.
-    """
-
-    def __init__(self):
-        super(IdentityNetwork, self).__init__()
-
-        # Convolutional layers
-        self.conv1 = nn.Conv2d(3, 16, kernel_size=3, stride=2, padding=1)
-        self.conv2 = nn.Conv2d(16, 32, kernel_size=3, stride=2, padding=1)
-
-        # Max pooling
-        self.pool = nn.MaxPool2d(kernel_size=2, stride=2, padding=0)
-
-        # Identity Block
-        self.id_block = nn.Sequential(
-            nn.Conv2d(32, 32, kernel_size=1),
-            nn.ReLU(),
-            nn.Conv2d(32, 32, kernel_size=3, padding=1),
-            nn.ReLU(),
-            nn.Conv2d(32, 32, kernel_size=1)
-        )
-
-        # Calculate the size of the flattened layer before the first linear layer
-        self._to_linear = None
-        self._calculate_to_linear(1000, 1000)  # Assuming input size is 1000x1000
-
-        # Fully connected layers
-        self.fc1 = nn.Linear(self._to_linear, 128)
-        self.fc2 = nn.Linear(128, 4)
-
-        # Activation functions
-        self.relu = nn.ReLU()
-        self.sigmoid = nn.Sigmoid()
-
-        # Optimizer
-        self.optimizer = optim.Adam(self.parameters(), lr=parameters.learning_rate)
-
-        # Loss function
-        self.loss_function = nn.MSELoss()  # Placeholder loss function, replace as needed
-
-    def _calculate_to_linear(self, h, w):
-        x = torch.randn(3, h, w).unsqueeze(0)
-        x = self.pool(self.relu(self.conv1(x)))
-        x = self.conv2(x)
-        identity = x
-        x = self.id_block(x)
-        x += identity
-        x = self.pool(x)  # Assuming another pooling layer here
-        self._to_linear = x.shape[1] * x.shape[2] * x.shape[3]
-
-    def forward(self, x):
-        x = self.relu(self.conv1(x))
-        x = self.pool(x)
-        x = self.conv2(x)
-        identity = x
-        x = self.id_block(x)
-        x += identity
-        x = self.pool(x)  # Assuming another pooling layer here
-        x = x.view(-1, self._to_linear)  # Flatten the output for the linear layer
-        x = self.relu(self.fc1(x))
-        x = self.sigmoid(self.fc2(x))
         return x
 
 

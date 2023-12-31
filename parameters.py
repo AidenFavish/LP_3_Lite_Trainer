@@ -8,7 +8,7 @@ only_validate = False
 parallel_processing = False
 
 # LOCAL ACCESS PARAMETERS
-training_folder = "/home/penny/Desktop/LP_Training/TrainingData3"
+training_folder = r"C:\Users\aiden\OneDrive\Desktop\Training1"
 model_path = "/home/penny/Desktop/LP_Training/v5.pth"
 save_as = "/home/penny/Desktop/LP_Training/v5.pth"
 validation_folder = "/home/penny/Desktop/LP_Training/ValidationData1"
