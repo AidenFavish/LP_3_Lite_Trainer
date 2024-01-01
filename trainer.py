@@ -65,7 +65,7 @@ def train(model, dataloader, device):
         if epoch + 1 >= min_saving_epoch and (best_loss == -1 or avg_loss < best_loss):
             best_loss = avg_loss
             model_tools.save_model_state(model, parameters.save_as)
-            print(f"\034[1;33mModel saved at epoch {epoch + 1} with loss {best_loss:.3f}\033[0m")
+            print(f"\033[1;34mModel saved at epoch {epoch + 1} with loss {best_loss:.3f}\033[0m")
 
         seconds = int(duration * (num_epochs - epoch - 1))
         print(f"\033[1;33mETA: {seconds // 60} minutes and {seconds % 60} seconds\033[0m\n")

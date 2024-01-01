@@ -15,7 +15,7 @@ save_as = "/Users/aiden/Desktop/Training/v6_6.pth"
 validation_folder = "/Users/aiden/Desktop/Training/Validation1"
 
 # HYPERPARAMETERS
-learning_rate = 0.001
+learning_rate = 0.002
 weight_decay = 1e-5
 batch_size = 25
-num_epochs = 15
+num_epochs = 20
