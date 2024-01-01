@@ -19,7 +19,7 @@ class ImprovedCNN(nn.Module):
         self.conv1 = nn.Conv2d(3, 16, kernel_size=3, stride=2, padding=1)
         self.conv2 = nn.Conv2d(16, 32, kernel_size=3, stride=2, padding=1)
         self.pool = nn.MaxPool2d(kernel_size=2, stride=2, padding=0)
-        self.dropout = nn.Dropout(0.5)
+        self.dropout = nn.Dropout(0.1)
 
         # Calculate output sizes for conv and pooling layers
         self.conv_output_size1 = ((1000 - 3 + 2 * 1) // 2 + 1)  # Output size after conv1
@@ -35,14 +35,15 @@ class ImprovedCNN(nn.Module):
         self.act2 = nn.Sigmoid()
 
         # Optimizer
-        self.optimizer = optim.SGD(self.parameters(), lr=parameters.learning_rate)
+        self.optimizer = optim.Adam(self.parameters(), lr=parameters.learning_rate)
 
         # Loss function
         self.loss_function = PFLoss()
 
     def forward(self, x):
         x = self.act1(self.conv1(x))
-        x2 = self.act1(self.pool(x))
+        x = self.act1(self.pool(x))
+        x2 = self.dropout(x)
         x = self.act1(self.conv2(x2))
         x = self.act1(self.pool(x))
         x = self.dropout(x)
@@ -54,7 +55,7 @@ class ImprovedCNN(nn.Module):
 
 
 class PFLoss(nn.Module):
-    def __init__(self, diversity_factor=1.0, min_std_dev=0.5):
+    def __init__(self, diversity_factor=1.0, min_std_dev=0.25):
         super(PFLoss, self).__init__()
         self.diversity_factor = diversity_factor
         self.min_std_dev = min_std_dev
@@ -75,8 +76,8 @@ class PFLoss(nn.Module):
         ytstd = torch.std(yt)
         rtstd = torch.std(rt)
 
-        lossMSE = torch.mean(2 ** torch.abs(xp - xt)) + torch.mean(2 ** torch.abs(yp - yt)) + torch.mean(2 ** torch.abs(rp - rt))
-        lossSTD = torch.mean(2 ** torch.abs(xpstd - xtstd)) + torch.mean(2 ** torch.abs(ypstd - ytstd)) + torch.mean(2 ** torch.abs(rpstd - rtstd))
-        loss = lossMSE + lossSTD
+        lossMSE = torch.sum(4 ** torch.abs(xp - xt) - 1) + torch.sum(3 ** torch.abs(yp - yt) - 1) + torch.sum(3 ** torch.abs(rp - rt) - 1)
+        lossSTD = (3 ** torch.abs(xpstd - xtstd) - 1) + (3 ** torch.abs(ypstd - ytstd) - 1) + (3 ** torch.abs(rpstd - rtstd) - 1)
+        loss = lossMSE + 50 * lossSTD
 
-        return loss, [lossMSE.item(), lossSTD.item()]
+        return loss, [lossMSE.item(), 50 * lossSTD.item()]

@@ -27,6 +27,10 @@ def train(model, dataloader, device):
         optimizer = model.optimizer
         criterion = model.loss_function
 
+    # Save the best performing model
+    min_saving_epoch = parameters.min_saving_epoch
+    best_loss = -1
+
     for epoch in range(num_epochs):
         print("------------------------------------------")
 
@@ -46,6 +50,7 @@ def train(model, dataloader, device):
 
             avg_loss = running_loss / (i + 1)  # Average loss for the epoch so far
             writer.add_scalar('training loss', avg_loss, epoch * len(dataloader) + i)
+
             if i == len(dataloader) - 1:
                 print(f'[{epoch + 1}, {i + 1}] avg loss: {avg_loss:.3f}, components: {components}\nEpoch mini-test:\npredict: {outputs.tolist()[0]}\nactual: {labels.tolist()[0]}')
             elif i % parameters.batch_print == 0:
@@ -54,6 +59,14 @@ def train(model, dataloader, device):
         duration = time.time() - start_time
         print(
             f"------------------------------------------\n\033[1;31mEpoch {epoch + 1} finished. Average Loss: {running_loss / len(dataloader)}\033[0m")
+
+        # Save the best performing model
+        avg_loss = running_loss / len(dataloader)
+        if epoch + 1 >= min_saving_epoch and (best_loss == -1 or avg_loss < best_loss):
+            best_loss = avg_loss
+            model_tools.save_model_state(model, parameters.save_as)
+            print(f"\034[1;33mModel saved at epoch {epoch + 1} with loss {best_loss:.3f}\033[0m")
+
         seconds = int(duration * (num_epochs - epoch - 1))
         print(f"\033[1;33mETA: {seconds // 60} minutes and {seconds % 60} seconds\033[0m\n")
 
