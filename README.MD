@@ -24,3 +24,4 @@ I hope to create a program that can take in a input of a 1000x1000 px image and 
 
 ## Ideas
 - Multi-gpu optimizer switching model
+- A uniquely perfect custom loss function is necessary to get perfect results

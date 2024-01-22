@@ -42,7 +42,8 @@ def train(model, dataloader, device):
 
             optimizer.zero_grad()
             outputs = model(inputs)
-            loss, components = criterion(outputs, labels)
+            loss = criterion(outputs, labels)
+            components = loss.item()
             loss.backward()
             optimizer.step()
 

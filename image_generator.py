@@ -17,14 +17,17 @@ def generate_images(data, folder_path, csv_filename):
         writer = csv.writer(file)
         # Write the header
         writer.writerow(['frame number', 'centerX', 'centerY', 'radius', 'turn'])
+        ctr = 0
 
         for i in data:
             # Random background color
             bg_color = (random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
+            bg_color = (255, 255, 255)
             img = Image.new('RGB', (1000, 1000), color=bg_color)
 
             # Random square properties
             square_color = (random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
+            square_color = (0, 0, 0)
             top_left_x = i[0]
             top_left_y = i[1]
             square_size = i[2]
@@ -37,12 +40,22 @@ def generate_images(data, folder_path, csv_filename):
                            fill=square_color)
 
             # Save the image
-            img_name = f'frame{i}.0.jpg'
+            img_name = f'frame{ctr}.0.jpg'
             img.save(os.path.join(folder_path, img_name))
 
+            # Minor change
+            if center_x <= 500:
+                center_x = 1000
+                center_y = 0
+            else:
+                center_x = 0
+                center_y = 1000
+
             # Write the square's details to the CSV
-            writer.writerow([i, center_x / 1000.0, center_y / 1000.0, square_size / 2000.0, 0])
+            writer.writerow([ctr, center_x / 1000.0, center_y / 1000.0, square_size / 2000.0, 0])
             # Averages: centerX = 0.5001, centerY = 0.5001, radius = 0.0625
+
+            ctr += 1
 
     print(f"Generated {len(data)} images in folder '{folder_path}' with CSV file '{csv_filename}'")
 
@@ -77,5 +90,5 @@ def discrete_location(types, copies):
     return points
 
 
-generate_images(discrete_location([[250, 500], [750, 500]], 400), "/Users/aiden/Desktop/Training/Training1", "data.csv")
-generate_images(discrete_location([[250, 500], [750, 500]], 3), "/Users/aiden/Desktop/Training/Validation1", "data.csv")
+generate_images(discrete_location([[250, 500], [750, 500]], 400), "/Users/aiden/Desktop/Training/Training2", "data.csv")
+generate_images(discrete_location([[250, 500], [750, 500]], 3), "/Users/aiden/Desktop/Training/Validation2", "data.csv")

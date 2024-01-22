@@ -12,7 +12,7 @@ import torch.nn as nn
 # Main function
 def main():
     # DEFAULT MODEL
-    default_model = model_architectures.ImprovedCNN()
+    default_model = model_architectures.ImprovedCNN2()
 
     # Ask user to train a new model or load an existing one
     load_input = input(
@@ -38,8 +38,7 @@ def main():
     # Skips training if the user wants to only validate otherwise trains and saves model here
     if not parameters.only_validate:
         # Load training data
-        training_dataset = dataset_loader.LPDataset1(project_dir=parameters.training_folder,
-                                                     transform=transforms.ToTensor())
+        training_dataset = dataset_loader.LPDataset2(project_dir=parameters.training_folder)
         train_loader = DataLoader(dataset=training_dataset, batch_size=parameters.batch_size, shuffle=True,
                                   num_workers=2)
 

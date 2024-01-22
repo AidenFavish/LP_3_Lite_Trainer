@@ -1,6 +1,6 @@
 import torch.nn as nn
 import torch.optim as optim
-import torchvision.models
+from torchvision.models import resnet50, ResNet50_Weights
 import torch
 import parameters
 
@@ -22,7 +22,8 @@ class ImprovedCNN(nn.Module):
 
         # Calculate output sizes for conv and pooling layers
         self.conv_output_size1 = ((1000 - 3 + 2 * 1) // 2 + 1)  # Output size after conv1
-        self.conv_output_size2 = (((self.conv_output_size1 * self.conv_output_size1 // 4) - 3 + 2 * 1) // 2 + 1)  # Output size after conv2
+        self.conv_output_size2 = (((
+                                           self.conv_output_size1 * self.conv_output_size1 // 4) - 3 + 2 * 1) // 2 + 1)  # Output size after conv2
         self.pool_output_size = 62  # magic number
 
         # Fully connected layers
@@ -73,8 +74,44 @@ class PFLoss(nn.Module):
         ytstd = torch.std(yt)
         rtstd = torch.std(rt)
 
-        lossMSE = torch.sum(4 ** torch.abs(xp - xt) - 1) + torch.sum(3 ** torch.abs(yp - yt) - 1) + torch.sum(3 ** torch.abs(rp - rt) - 1)  # Intentionally above y = x
-        lossSTD = (2 ** torch.abs(xpstd - xtstd) - 1) + (2 ** torch.abs(ypstd - ytstd) - 1) + (2 ** torch.abs(rpstd - rtstd) - 1)  # Intentionally partially below y = x
-        loss = lossMSE + 50 * lossSTD
+        lossMSE = 3 ** torch.mean(3 ** torch.abs(predictions - targets) - 1, dim=0) - 1
+        lossSTD = (2 ** torch.abs(xpstd - xtstd) - 1) + (2 ** torch.abs(ypstd - ytstd) - 1) + (
+                2 ** torch.abs(rpstd - rtstd) - 1)  # Intentionally partially below y = x
+        loss = lossMSE.sum() + 25 * lossSTD
 
-        return loss, [lossMSE.item(), 50 * lossSTD.item()]
+        return loss, [lossMSE.tolist(), 25 * lossSTD.item()]
+
+
+class ImprovedCNN2(nn.Module):
+    def __init__(self):
+        super(ImprovedCNN2, self).__init__()
+
+        # Load a pre-trained ResNet model
+        self.pretrained_model = resnet50(weights=ResNet50_Weights.DEFAULT)
+
+        # Optionally, you can freeze the layers of the pre-trained model
+        for param in self.pretrained_model.parameters():
+            param.requires_grad = False
+
+        # Replace the final fully connected layer of ResNet for your specific task
+        # For example, if the ResNet model outputs a feature vector of size 512,
+        # and you want to output a 4-dimensional vector for your task:
+        # self.pretrained_model.fc = nn.Linear(2048, 64)
+
+        # Fully connected layers
+        self.fc1 = nn.Linear(1000, 2)
+
+        # Activation functions
+        self.act1 = nn.Softmax(dim=0)
+
+        # Optimizer
+        self.optimizer = optim.Adam(self.parameters(), lr=parameters.learning_rate,
+                                    weight_decay=parameters.weight_decay)
+
+        # Loss function
+        self.loss_function = nn.CrossEntropyLoss()
+
+    def forward(self, x):
+        x = self.pretrained_model(x)
+        x = self.act1(self.fc1(x))
+        return x
